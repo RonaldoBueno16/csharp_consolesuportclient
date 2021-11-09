@@ -6,12 +6,14 @@ namespace Suporte_ao_cliente
     {
         static void Main(string[] args)
         {
+            
+
             int opcao;
             string string_digitada;
 
             while(true)
             {
-                Console.WriteLine("=====================================");
+                Console.WriteLine("\n\n=====================================");
                 Console.WriteLine("====[Selecione a opção desejada]=====");
                 Console.WriteLine("=====================================");
                 Console.WriteLine("1 - Entrar como cliente (ABRIR CHAMADO)");
@@ -53,10 +55,32 @@ namespace Suporte_ao_cliente
                     string problema = Console.ReadLine();
 
                     usuario.AbrirChamado(titulo_chamado, problema);
+
+                    Console.WriteLine("\nVocê abriu o ticket:[" + titulo_chamado+"] com o assunto:["+ problema + "]\n\n");
                 }
                 else if(opcao == 2)
                 {
-                    Console.WriteLine("Você entrou na área do suporte");
+                    string login, senha;
+                    TentarNovamente:
+                    Console.WriteLine("\n===[CREDENCIAIS]===");
+                    Console.Write("Digite o usuário: ");
+                    login = Console.ReadLine();
+
+                    Console.Write("Digite a senha: ");
+                    senha = Console.ReadLine();
+
+                    Console.WriteLine(login + senha);
+                    
+                    if(login != "admin" || senha != "admin")
+                    {
+                        string tentar_novamente;
+                        ErrouLetra:
+                        Console.Write("\nVocê digitou um usuário inválido, deseja tentar novamente? [Y/N] ");
+                        tentar_novamente = Console.ReadLine();
+
+                        if (tentar_novamente == "Y" || tentar_novamente == "y")
+                            goto TentarNovamente;
+                    }
                 }
                 else if(opcao == 3)
                 {
