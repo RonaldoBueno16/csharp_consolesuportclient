@@ -12,3 +12,7 @@ Metodos suporte:
 - ExibirChamado(int id) - Lista o chamado que ele selecionou (PELO ID)
 - ResponderChamado(int id, string resposta) - Responde o chamado e fecha-o automaticamente
 ;
+
+04/11 -
+
+Criamos as classes e metodos citadas anteriormente e demos inicio ao nosso projeto. Estamos decidindo como vamos fazer para executar o codigo de forma que o usuario entenda e interaja com oo sistema
