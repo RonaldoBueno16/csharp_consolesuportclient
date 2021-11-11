@@ -3,21 +3,23 @@ Projeto da matéria de C# faculdade UCL.
 
 O sistema que vamos criar consiste em uma chamada de um suporte do  site para resolução de um problema especifico . Será criado 2 classes, uma para o cliente e outra para o suporte, com os seguintes métodos:  
 
-Metodos cliente:
-- RegistrarCliente(nome, idade) - Registra um novo cliente
-- AbrirChamado(assunto, problema) - Abre um ticket para o suporte
-- listarMeusChamados() - Lista dos os chamados do cliente que executar
+Metodos Cliente
+- getName(): Obtém o nome do cliente
+- AbrirChamado(descricao, titulo, numeracao): Abre um chamado criando um novo Ticket
+- CancelarChamado(): Cancela o chamado que está em aberto
+- getTicket(): Obtém o Ticket do cliente
 
-Metodos suporte:
-- listarChamados() - Lista todos os chamados de todos os clientes
-- ExibirChamado(int id) - Lista o chamado que ele selecionou (PELO ID)
-- ResponderChamado(int id, string resposta) - Responde o chamado e fecha-o automaticamente
-;
+Metodos Ticket
+- Ticket(desc, titulo, number, client): Cria um novo ticket(chamado) informando o titulo, descrição, número e o cliente que abriu esse chamado.
+- ResponderTicket(resposta): Envia a resposta do suporte para o ticket
+- getUserTicket(): Obtém o usuário que criou o chamado
 
 04/11 -
 
-Criamos as classes e metodos citadas anteriormente e demos inicio ao nosso projeto. Estamos decidindo como vamos fazer para executar o codigo de forma que o usuario entenda e interaja com oo sistema
+- Criamos as classes e metodos citadas anteriormente e demos inicio ao nosso projeto. Estamos decidindo como vamos fazer para executar o codigo de forma que o usuario entenda e interaja com oo sistema
 
-09/11 -
+10/11 -
 
-Foi criado credenciais de login para entrar na área de suporte. (login: admin | senha: admin)
+- Foi criado credenciais de login para entrar na área de suporte. (login: admin | senha: admin);
+- Finalização da área de login e da área de suporte do sistema;
+- Finalizações das classes e metodos base do sistema;
