@@ -1,5 +1,7 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Text;
 
 namespace Suporte_ao_cliente
 {
@@ -7,15 +9,77 @@ namespace Suporte_ao_cliente
     {
         static void Main(string[] args)
         {
+            List<Cliente> todos_usuarios = new List<Cliente>();
+            int numeracao_chamados = 1;
+
+            string path = "D:/GitHub/csharp_consolesuportclient/Suporte ao cliente/dados/usuarios.txt";
+            if(!File.Exists(path))
+                File.Create(path);
+            else
+            {
+                string[] text = File.ReadAllLines(path);
+                
+                foreach(string line in text)
+                    todos_usuarios.Add(new Cliente(line));
+            }
+
+            path = "D:/GitHub/csharp_consolesuportclient/Suporte ao cliente/dados/tickets/";
+            string[] files = Directory.GetFiles(path, "*.*", SearchOption.AllDirectories);
+            foreach (var file in files)
+            {
+                FileInfo info = new FileInfo(file);
+
+                string[] text = File.ReadAllLines(info.ToString());
+
+                bool chamado_aberto = false;
+                string descricao = null;
+                string titulo = null;
+                string resposta = null;
+                Cliente client = null;
+                int numeroChamado = 0;
+
+                foreach(string line in text)
+                {
+                    string[] linha = line.Split("=");
+
+                    if (linha[0] == "chamado_aberto")
+                    {
+                        if (linha[1] == "true")
+                            chamado_aberto = true;
+                        else
+                            chamado_aberto = false;
+                    }
+                    else if (linha[0] == "descricao")
+                        descricao = linha[1];
+                    else if (linha[0] == "titulo")
+                        titulo = linha[1];
+                    else if (linha[0] == "resposta")
+                        resposta = linha[1];
+                    else if (linha[0] == "clientName")
+                    {
+                        client = GetClientName(linha[1]);
+                    }
+                    else if (linha[0] == "numero_chamado")
+                        numeroChamado = int.Parse(linha[1]);
+                }
+                if(client != null)
+                {
+                    Ticket ticketid = new Ticket(chamado_aberto, numeroChamado, descricao, titulo, resposta, client);
+                    client.setTicketID(ticketid);
+                    
+                    if (numeracao_chamados <= numeroChamado)
+                        numeracao_chamados = numeroChamado+1;
+                }
+            }
+
+
             int opcao;
             string string_digitada;
-            int numeracao_chamados = 1;
             Cliente usuario = null;
-            List<Cliente> todos_usuarios = new List<Cliente>();
 
             while(true)
             {
-                Console.WriteLine("Usuários cadastrados: " + todos_usuarios.Count);
+                Console.WriteLine("\nUsuários cadastrados: " + todos_usuarios.Count);
 
                 Console.WriteLine("\n\n=====================================");
                 Console.WriteLine("====[Selecione a opção desejada]=====");
@@ -38,7 +102,6 @@ namespace Suporte_ao_cliente
                 {
                     string nome_cliente;
 
-                    DigitarNome:
                     Console.Write("\nDigite o nome do usuário: ");
                     string_digitada = Console.ReadLine();
 
@@ -258,9 +321,7 @@ namespace Suporte_ao_cliente
                 foreach(Cliente client in todos_usuarios)
                 {
                     ticket_index = client.getTicket();
-                    if (ticket_index == null)
-                        return null;
-                    else
+                    if (ticket_index != null)
                         return ticket_index;
                 }
                 return null;
@@ -281,7 +342,40 @@ namespace Suporte_ao_cliente
 
         public Cliente(string _nome)
         {
-            this.nome = _nome;
+            if(_nome != "")
+            {
+                this.nome = _nome;
+
+                try
+                {
+                    string path = "D:\\GitHub\\csharp_consolesuportclient\\Suporte ao cliente\\dados\\usuarios.txt";
+                    bool adicionar = true;
+                    
+                    
+                    using (StreamReader sr = new StreamReader(path))
+                    {
+                        while (sr.Peek() > 0)
+                        {
+                            if (sr.ReadLine() == _nome)
+                            {
+                                adicionar = false;
+                            }
+                        }
+                    }
+
+                    if(adicionar)
+                    {
+                        using (StreamWriter sw = new StreamWriter(path, append: true))
+                        {
+                            sw.WriteLine(_nome);
+                        }
+                    }
+                }
+                catch(Exception e)
+                {
+                    Console.WriteLine("Não foi possível registrar o nome do usuário no banco de dados.");
+                }
+            }
         }
 
         public void AbrirChamado(string descricao, string titulo, int number)
@@ -289,15 +383,9 @@ namespace Suporte_ao_cliente
             chamado = new Ticket(descricao, titulo, number, this);
         }
 
-        public bool CancelarChamado()
+        public void setTicketID(Ticket ticketid)
         {
-            if (this.chamado == null)
-                return false;
-            else
-            {
-                this.chamado = null;
-                return true; 
-            }
+            this.chamado = ticketid;
         }
 
         public Ticket getTicket()
@@ -322,12 +410,48 @@ namespace Suporte_ao_cliente
             this.descricao = descricaoTicket;
             this.titulo = tituloTicket;
             this.client = clientTicket;
+
+            this.UpdateFile();
+        }
+
+        public void UpdateFile()
+        {
+            string path = "D:/GitHub/csharp_consolesuportclient/Suporte ao cliente/dados/tickets/" + this.numero_chamado + ".txt";
+
+            byte[] bdata;
+
+            FileStream fs = new FileStream(path, FileMode.Create);
+            bdata = Encoding.Default.GetBytes("chamado_aberto=" + (this.chamado_aberto ? ("true") : ("false")) + "");
+            fs.Write(bdata, 0, bdata.Length);
+            bdata = Encoding.Default.GetBytes("\nnumero_chamado=" + this.numero_chamado + "");
+            fs.Write(bdata, 0, bdata.Length);
+            bdata = Encoding.Default.GetBytes("\ndescricao=" + this.descricao + "");
+            fs.Write(bdata, 0, bdata.Length);
+            bdata = Encoding.Default.GetBytes("\ntitulo=" + this.titulo + "");
+            fs.Write(bdata, 0, bdata.Length);
+            bdata = Encoding.Default.GetBytes("\nresposta=" + this.resposta + "");
+            fs.Write(bdata, 0, bdata.Length);
+            bdata = Encoding.Default.GetBytes("\nclientName=" + this.client.getName() + "");
+            fs.Write(bdata, 0, bdata.Length);
+            fs.Close();
+        }
+
+        public Ticket(bool status, int chamado, string desc, string title, string response, Cliente clientASD)
+        {
+            this.chamado_aberto = status;
+            this.numero_chamado = chamado;
+            this.descricao = desc;
+            this.titulo = title;
+            this.resposta = response;
+            this.client = clientASD;
         }
 
         public void ResponderTicket(string respostaTicket)
         {
             this.resposta = respostaTicket;
             this.chamado_aberto = false;
+
+            this.UpdateFile();
         }
 
         public Cliente getUserTicket()
@@ -336,4 +460,5 @@ namespace Suporte_ao_cliente
         }
     }
 }
+
 
