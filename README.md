@@ -23,3 +23,6 @@ Metodos Ticket
 - Foi criado credenciais de login para entrar na área de suporte. (login: admin | senha: admin);
 - Finalização da área de login e da área de suporte do sistema;
 - Finalizações das classes e metodos base do sistema;
+
+
+LINK DO VIDEO NO YOUTUBE - https://youtu.be/Qxbqf5y0XyM
