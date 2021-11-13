@@ -1,7 +1,7 @@
 # csharp_consolesuportclient
 Projeto da matéria de C# faculdade UCL.
 
-O sistema que vamos criar consiste em uma chamada de um suporte do  site para resolução de um problema especifico . Será criado 2 classes, uma para o cliente e outra para o suporte, com os seguintes métodos:  
+O sistema que vamos criar consiste em uma chamada de um suporte  para resolução de um problema . Será criado 2 classes, uma para o cliente e outra para o suporte, com os seguintes métodos:  
 
 Metodos Cliente
 - getName(): Obtém o nome do cliente
