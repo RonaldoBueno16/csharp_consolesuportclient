@@ -6,4 +6,8 @@
     <RootNamespace>Suporte_ao_cliente</RootNamespace>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Folder Include="dados\tickets\" />
+  </ItemGroup>
+
 </Project>
